@@ -84,7 +84,7 @@ app.post('/api/chat', async (req, res) => {
         body: JSON.stringify({
           system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
           contents: geminiContents,
-          generationConfig: { maxOutputTokens: 1500, temperature: 0.3 }
+          generationConfig: { maxOutputTokens: 800, temperature: 0.3 }
         })
       }
     );

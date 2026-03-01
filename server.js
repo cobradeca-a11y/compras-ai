@@ -1,4 +1,3 @@
-
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -49,14 +48,14 @@ app.post('/api/chat', async (req, res) => {
         "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`
       },
       body: JSON.stringify({
-  model: "mistralai/mistral-7b-instruct",
-  messages: [
-    { role: "system", content: SYSTEM_PROMPT },
-    { role: "user", content: need }
-  ],
-  temperature: 0.2,
-  max_tokens: 800
-})
+        model: "mistralai/mistral-7b-instruct",
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          { role: "user", content: need }
+        ],
+        temperature: 0.2,
+        max_tokens: 800
+      })
     });
 
     const data = await response.json();

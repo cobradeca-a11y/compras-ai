@@ -109,7 +109,7 @@ ANÁLISE_JSON:
 
 function normalizeMessages(messages) {
   // economiza tokens: manda só as últimas mensagens
-  const last = Array.isArray(messages) ? messages.slice(-10) : [];
+  const last = Array.isArray(messages) ? messages.slice(-8) : [];
 
   // seu frontend usa { role, content } — perfeito pro OpenRouter
   return last.map(m => ({

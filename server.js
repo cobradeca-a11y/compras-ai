@@ -52,10 +52,10 @@ app.post('/api/chat', async (req, res) => {
         model: "mistralai/mistral-7b-instruct",
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: need }
-        ],
+          ...messages
+          ],
         temperature: 0.2,
-        max_tokens: 1500
+        max_tokens: 800
       })
     });
 

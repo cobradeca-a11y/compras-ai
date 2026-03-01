@@ -61,46 +61,64 @@ ANÁLISE_JSON:
   "observacoes": "observações finais"
 }`;
 
+function normalizeMessages(messages) {
+  // economiza tokens: manda só as últimas mensagens
+  const last = Array.isArray(messages) ? messages.slice(-10) : [];
+
+  // seu frontend usa { role, content } — perfeito pro OpenRouter
+  return last.map(m => ({
+    role: m.role === 'assistant' ? 'assistant' : 'user',
+    content: String(m.content ?? '')
+  }));
+}
+
 // Rota principal da API
 app.post('/api/chat', async (req, res) => {
   const { messages } = req.body;
 
-  if (!process.env.GEMINI_API_KEY) {
-    return res.status(500).json({ error: 'Chave da API não configurada no servidor.' });
+  if (!process.env.OPENROUTER_API_KEY) {
+    return res.status(500).json({ error: 'OPENROUTER_API_KEY não configurada no servidor.' });
   }
 
   try {
-    // Converte o histórico para o formato do Gemini
-    const geminiContents = messages.map(m => ({
-      role: m.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: m.content }]
-    }));
+    const openrouterMessages = [
+      { role: 'system', content: SYSTEM_PROMPT },
+      ...normalizeMessages(messages)
+    ];
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-          contents: geminiContents,
-          generationConfig: { maxOutputTokens: 800, temperature: 0.3 }
-        })
-      }
-    );
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        // opcional (bom pra rastrear)
+        'HTTP-Referer': process.env.APP_URL || 'https://compras-ai.onrender.com',
+        'X-Title': 'Compras.ai'
+      },
+      body: JSON.stringify({
+        model: 'openrouter/free',
+        messages: openrouterMessages,
+        temperature: 0.3,
+        max_tokens: 800
+      })
+    });
 
-    const data = await response.json();
-
-    if (data.error) {
-      return res.status(400).json({ error: data.error.message });
+    // tratamento robusto de erro (importante!)
+    if (!response.ok) {
+      const raw = await response.text();
+      return res.status(response.status).json({
+        error: `OpenRouter falhou (${response.status}): ${raw.slice(0, 400)}`
+      });
     }
 
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    res.json({ text });
+    const data = await response.json();
+    const text = data?.choices?.[0]?.message?.content ?? '';
+
+    return res.json({ text });
 
   } catch (err) {
     console.error('Erro na API:', err);
-    res.status(500).json({ error: 'Erro interno do servidor.' });
+    return res.status(500).json({ error: 'Erro interno do servidor.' });
   }
 });
 

@@ -45,8 +45,10 @@ app.post('/api/chat', async (req, res) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`
-      },
+        "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        "HTTP-Referer": "https://compras-ai.onrender.com",
+        "X-Title": "Compras AI"
+      }
       body: JSON.stringify({
         model: "mistralai/mistral-7b-instruct",
         messages: [

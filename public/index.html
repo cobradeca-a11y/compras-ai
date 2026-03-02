@@ -3,503 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compras-AI - Sistema Inteligente de Aquisições Públicas</title>
+    <title>Compras-AI V2</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #2563eb;
-            --primary-dark: #1e40af;
-            --secondary: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --bg-light: #f8fafc;
-            --bg-white: #ffffff;
-            --text-dark: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: var(--text-dark);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .header {
-            background: var(--bg-white);
-            border-radius: 12px;
-            padding: 24px 32px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-lg);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: white;
-        }
-
-        .logo-text h1 {
-            font-size: 24px;
-            color: var(--text-dark);
-            font-weight: 700;
-        }
-
-        .logo-text p {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-        }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 24px;
-        }
-
-        .sidebar {
-            background: var(--bg-white);
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: var(--shadow-lg);
-            height: fit-content;
-        }
-
-        .menu-item {
-            padding: 12px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .menu-item:hover {
-            background: var(--bg-light);
-        }
-
-        .menu-item.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        .wizard-container {
-            background: var(--bg-white);
-            border-radius: 12px;
-            padding: 32px;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .wizard-header {
-            margin-bottom: 32px;
-        }
-
-        .wizard-header h2 {
-            font-size: 28px;
-            margin-bottom: 8px;
-            color: var(--text-dark);
-        }
-
-        .wizard-header p {
-            color: var(--text-muted);
-            font-size: 15px;
-        }
-
-        .progress-steps {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 40px;
-            position: relative;
-        }
-
-        .progress-steps::before {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--border);
-            z-index: 0;
-        }
-
-        .progress-line {
-            position: absolute;
-            top: 20px;
-            left: 0;
-            height: 2px;
-            background: var(--primary);
-            transition: width 0.3s;
-            z-index: 1;
-        }
-
-        .step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-            background: var(--bg-white);
-            padding: 0 10px;
-        }
-
-        .step-circle {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--bg-light);
-            border: 2px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            margin-bottom: 8px;
-            transition: all 0.3s;
-        }
-
-        .step.active .step-circle {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: white;
-        }
-
-        .step.completed .step-circle {
-            background: var(--secondary);
-            border-color: var(--secondary);
-            color: white;
-        }
-
-        .step-label {
-            font-size: 13px;
-            color: var(--text-muted);
-            font-weight: 500;
-            text-align: center;
-        }
-
-        .step.active .step-label {
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        .form-section {
-            display: none;
-        }
-
-        .form-section.active {
-            display: block;
-            animation: fadeIn 0.3s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text-dark);
-            font-size: 14px;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            font-size: 15px;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .radio-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            margin-top: 8px;
-        }
-
-        .radio-option {
-            position: relative;
-        }
-
-        .radio-option input[type="radio"] {
-            position: absolute;
-            opacity: 0;
-        }
-
-        .radio-label {
-            display: block;
-            padding: 16px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
-            font-weight: 500;
-        }
-
-        .radio-option input[type="radio"]:checked + .radio-label {
-            border-color: var(--primary);
-            background: rgba(37, 99, 235, 0.05);
-            color: var(--primary);
-        }
-
-        .radio-label:hover {
-            border-color: var(--primary);
-        }
-
-        .button-group {
-            display: flex;
-            gap: 12px;
-            margin-top: 32px;
-            justify-content: space-between;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 15px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .btn-secondary {
-            background: var(--bg-light);
-            color: var(--text-dark);
-        }
-
-        .btn-secondary:hover {
-            background: var(--border);
-        }
-
-        .btn-success {
-            background: var(--secondary);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #059669;
-        }
-
-        .alert {
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 24px;
-            display: none;
-        }
-
-        .alert.show {
-            display: block;
-            animation: slideDown 0.3s;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .alert-info {
-            background: rgba(37, 99, 235, 0.1);
-            color: var(--primary);
-            border-left: 4px solid var(--primary);
-        }
-
-        .alert-warning {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
-            border-left: 4px solid var(--warning);
-        }
-
-        .alert-success {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--secondary);
-            border-left: 4px solid var(--secondary);
-        }
-
-        .results-card {
-            background: var(--bg-light);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 16px;
-        }
-
-        .results-card h3 {
-            font-size: 18px;
-            margin-bottom: 12px;
-            color: var(--text-dark);
-        }
-
-        .results-card p {
-            color: var(--text-muted);
-            line-height: 1.6;
-            margin-bottom: 8px;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-right: 8px;
-        }
-
-        .badge-success {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--secondary);
-        }
-
-        .badge-warning {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
-        }
-
-        .badge-danger {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-        }
-
-        .badge-info {
-            background: rgba(37, 99, 235, 0.1);
-            color: var(--primary);
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 40px;
-        }
-
-        .loading.show {
-            display: block;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 16px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar {
-                display: none;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .progress-steps {
-                overflow-x: auto;
-            }
-
-            .step-label {
-                font-size: 11px;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; gap: 12px; align-items: center; }
+        .logo-icon { width: 48px; height: 48px; background: linear-gradient(135deg, #2563eb, #10b981); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .main-content { display: grid; grid-template-columns: 250px 1fr; gap: 20px; }
+        .sidebar { background: white; border-radius: 12px; padding: 20px; }
+        .menu-item { padding: 12px; border-radius: 8px; cursor: pointer; margin-bottom: 8px; }
+        .menu-item:hover { background: #f0f0f0; }
+        .menu-item.active { background: #2563eb; color: white; }
+        .wizard-container { background: white; border-radius: 12px; padding: 30px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px; }
+        .form-group textarea { min-height: 100px; }
+        .btn { padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-secondary { background: #6b7280; color: white; }
+        .hidden { display: none; }
+        .alert { padding: 15px; border-radius: 6px; margin-bottom: 20px; }
+        .alert-success { background: #d1fae5; color: #065f46; }
+        .alert-info { background: #dbeafe; color: #1e40af; }
+        #documentLinks a { display: block; margin: 10px 0; padding: 10px; background: #f3f4f6; border-radius: 6px; text-decoration: none; color: #1f2937; }
     </style>
 </head>
 <body>
@@ -507,273 +37,178 @@
         <header class="header">
             <div class="logo">
                 <div class="logo-icon">📋</div>
-                <div class="logo-text">
-                    <h1>Compras-AI</h1>
-                    <p>Sistema Inteligente de Aquisições Públicas</p>
-                </div>
-            </div>
-            <div class="user-info">
-                <div>
-                    <div style="font-weight: 600; text-align: right;">Usuário</div>
-                    <div style="font-size: 13px; color: var(--text-muted);">Gestor de Compras</div>
-                </div>
-                <div class="user-avatar">U</div>
+                <div><h1>Compras-AI V2</h1><p>Sistema Inteligente</p></div>
             </div>
         </header>
 
         <div class="main-content">
             <aside class="sidebar">
-                <div class="menu-item active">
-                    <span class="menu-icon">🎯</span>
-                    Nova Aquisição
-                </div>
-                <div class="menu-item">
-                    <span class="menu-icon">📁</span>
-                    Minhas Aquisições
-                </div>
-                <div class="menu-item">
-                    <span class="menu-icon">📊</span>
-                    Relatórios
-                </div>
-                <div class="menu-item">
-                    <span class="menu-icon">⚙️</span>
-                    Configurações
-                </div>
-                <div class="menu-item">
-                    <span class="menu-icon">❓</span>
-                    Ajuda
-                </div>
+                <div class="menu-item active" onclick="showPage('nova')">🎯 Nova Aquisição</div>
+                <div class="menu-item" onclick="showPage('minhas')">📁 Minhas Aquisições</div>
+                <div class="menu-item" onclick="showPage('ajuda')">❓ Ajuda</div>
             </aside>
 
             <main class="wizard-container">
-                <div class="wizard-header">
-                    <h2>Nova Solicitação de Aquisição</h2>
-                    <p>Preencha os dados para gerar automaticamente os documentos necessários</p>
-                </div>
-
-                <div class="progress-steps">
-                    <div class="progress-line" id="progressLine" style="width: 0%"></div>
-                    <div class="step active" data-step="1">
-                        <div class="step-circle">1</div>
-                        <div class="step-label">Dados Básicos</div>
-                    </div>
-                    <div class="step" data-step="2">
-                        <div class="step-circle">2</div>
-                        <div class="step-label">Modalidade</div>
-                    </div>
-                    <div class="step" data-step="3">
-                        <div class="step-circle">3</div>
-                        <div class="step-label">Especificação</div>
-                    </div>
-                    <div class="step" data-step="4">
-                        <div class="step-circle">4</div>
-                        <div class="step-label">Detalhes</div>
-                    </div>
-                    <div class="step" data-step="5">
-                        <div class="step-circle">5</div>
-                        <div class="step-label">Resumo</div>
-                    </div>
-                </div>
-
-                <form id="acquisitionForm">
-                    <!-- Step 1 -->
-                    <div class="form-section active" data-section="1">
-                        <div class="alert alert-info show">
-                            <strong>📋 Passo 1:</strong> Vamos começar com as informações básicas da aquisição
-                        </div>
-
+                <div id="novaPage">
+                    <h2>Nova Aquisição</h2>
+                    <form id="form" onsubmit="submitForm(event)">
                         <div class="form-group">
                             <label>Tipo de Contratação *</label>
-                            <div class="radio-group">
-                                <div class="radio-option">
-                                    <input type="radio" name="tipo_contratacao" value="produto" id="tipo_produto" required>
-                                    <label for="tipo_produto" class="radio-label">🛒 Produto/Material</label>
-                                </div>
-                                <div class="radio-option">
-                                    <input type="radio" name="tipo_contratacao" value="servico" id="tipo_servico">
-                                    <label for="tipo_servico" class="radio-label">🔧 Serviço</label>
-                                </div>
-                                <div class="radio-option">
-                                    <input type="radio" name="tipo_contratacao" value="obra" id="tipo_obra">
-                                    <label for="tipo_obra" class="radio-label">🏗️ Obra</label>
-                                </div>
-                                <div class="radio-option">
-                                    <input type="radio" name="tipo_contratacao" value="engenharia" id="tipo_engenharia">
-                                    <label for="tipo_engenharia" class="radio-label">📐 Engenharia</label>
-                                </div>
-                            </div>
+                            <select name="tipo_contratacao" required>
+                                <option value="produto">🛒 Produto/Material</option>
+                                <option value="servico">🔧 Serviço</option>
+                                <option value="obra">🏗️ Obra</option>
+                                <option value="engenharia">📐 Engenharia</option>
+                            </select>
                         </div>
-
                         <div class="form-group">
                             <label>Descrição do Objeto *</label>
-                            <textarea name="descricao" required placeholder="Descreva detalhadamente o que será adquirido..."></textarea>
+                            <textarea name="descricao" required placeholder="Descreva o que será adquirido..."></textarea>
                         </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Quantidade *</label>
-                                <input type="text" name="quantidade" required placeholder="Ex: 100 unidades">
-                            </div>
-                            <div class="form-group">
-                                <label>Valor Estimado (R$) *</label>
-                                <input type="number" name="valor_estimado" step="0.01" required placeholder="0,00">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Step 2 -->
-                    <div class="form-section" data-section="2">
-                        <div class="alert alert-info show">
-                            <strong>⚖️ Passo 2:</strong> Escolha a modalidade de contratação
-                        </div>
-
                         <div class="form-group">
-                            <label>Modalidade de Licitação *</label>
-                            <div class="radio-group">
-                                <div class="radio-option">
-                                    <input type="radio" name="modalidade" value="dispensa" id="mod_dispensa" required>
-                                    <label for="mod_dispensa" class="radio-label">Dispensa de Licitação</label>
-                                </div>
-                                <div class="radio-option">
-                                    <input type="radio" name="modalidade" value="inexigibilidade" id="mod_inexig">
-                                    <label for="mod_inexig" class="radio-label">Inexigibilidade</label>
-                                </div>
-                                <div class="radio-option">
-                                    <input type="radio" name="modalidade" value="pregao" id="mod_pregao">
-                                    <label for="mod_pregao" class="radio-label">Pregão Eletrônico</label>
-                                </div>
-                                <div class="radio-option">
-                                    <input type="radio" name="modalidade" value="concorrencia" id="mod_concorrencia">
-                                    <label for="mod_concorrencia" class="radio-label">Concorrência</label>
-                                </div>
-                            </div>
+                            <label>Quantidade *</label>
+                            <input type="text" name="quantidade" required placeholder="Ex: 100 unidades">
                         </div>
-
-                        <div class="form-group" id="hipotese_dispensa_group" style="display: none;">
-                            <label>Hipótese de Dispensa *</label>
+                        <div class="form-group">
+                            <label>Valor Estimado (R$) *</label>
+                            <input type="number" step="0.01" name="valor_estimado" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Modalidade *</label>
+                            <select name="modalidade" required onchange="toggleHipotese(this)">
+                                <option value="dispensa">Dispensa</option>
+                                <option value="pregao">Pregão</option>
+                                <option value="concorrencia">Concorrência</option>
+                            </select>
+                        </div>
+                        <div class="form-group hidden" id="hipoteseGroup">
+                            <label>Hipótese de Dispensa</label>
                             <select name="hipotese_dispensa">
-                                <option value="">Selecione...</option>
-                                <option value="dispensa_por_valor">Dispensa por Valor (Art. 75, I e II)</option>
-                                <option value="emergencia">Emergência ou Calamidade (Art. 75, VIII)</option>
-                                <option value="unico_fornecedor">Único Fornecedor (Art. 74, III, c)</option>
+                                <option value="dispensa_por_valor">Dispensa por Valor</option>
+                                <option value="emergencia">Emergência</option>
                             </select>
                         </div>
-
                         <div class="form-group">
-                            <label>Justificativa da Escolha da Modalidade *</label>
-                            <textarea name="justificativa_modalidade" required placeholder="Explique por que esta modalidade é adequada..."></textarea>
-                        </div>
-                    </div>
-
-                    <!-- Step 3 -->
-                    <div class="form-section" data-section="3">
-                        <div class="alert alert-info show">
-                            <strong>📝 Passo 3:</strong> Especificações técnicas e requisitos
-                        </div>
-
-                        <div class="form-group">
-                            <label>Complexidade da Contratação *</label>
-                            <div class="radio-group">
-                                <div class="radio-option">
-                                    <input type="radio" name="complexidade" value="baixa" id="comp_baixa" required>
-                                    <label for="comp_baixa" class="radio-label">✅ Baixa</label>
-                                </div>
-                                <div class="radio-option">
-                                    <input type="radio" name="complexidade" value="media" id="comp_media">
-                                    <label for="comp_media" class="radio-label">⚠️ Média</label>
-                                </div>
-                                <div class="radio-option">
-                                    <input type="radio" name="complexidade" value="alta" id="comp_alta">
-                                    <label for="comp_alta" class="radio-label">🔴 Alta</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Normas Técnicas Aplicáveis</label>
-                            <textarea name="normas" placeholder="Ex: ABNT NBR 10898, NBR 16820, RDC/ANVISA nº 216/2004..."></textarea>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Prazo de Execução (dias)</label>
-                                <input type="number" name="prazo" placeholder="Ex: 30">
-                            </div>
-                            <div class="form-group">
-                                <label>Garantia (meses)</label>
-                                <input type="number" name="garantia" placeholder="Ex: 12">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Step 4 -->
-                    <div class="form-section" data-section="4">
-                        <div class="alert alert-info show">
-                            <strong>📋 Passo 4:</strong> Informações complementares
-                        </div>
-
-                        <div class="form-group">
-                            <label>Justificativa da Necessidade *</label>
-                            <textarea name="justificativa" required placeholder="Explique a necessidade e urgência da aquisição..."></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Origem dos Recursos *</label>
-                            <select name="origem_recursos" required>
-                                <option value="">Selecione...</option>
-                                <option value="orcamento_proprio">Orçamento Próprio</option>
-                                <option value="convenio">Convênio</option>
-                                <option value="emenda">Emenda Parlamentar</option>
-                                <option value="outros">Outros</option>
+                            <label>Complexidade *</label>
+                            <select name="complexidade" required>
+                                <option value="baixa">Baixa</option>
+                                <option value="media">Média</option>
+                                <option value="alta">Alta</option>
                             </select>
                         </div>
-
                         <div class="form-group">
-                            <label>Observações Adicionais</label>
-                            <textarea name="observacoes" placeholder="Informações extras que possam ser relevantes..."></textarea>
+                            <label>Prazo (dias)</label>
+                            <input type="number" name="prazo">
                         </div>
-                    </div>
-
-                    <!-- Step 5 -->
-                    <div class="form-section" data-section="5">
-                        <div class="loading" id="loadingAnalysis">
-                            <div class="spinner"></div>
-                            <p>Analisando sua solicitação com base na legislação...</p>
+                        <div class="form-group">
+                            <label>Observações</label>
+                            <textarea name="observacoes"></textarea>
                         </div>
+                        <button type="submit" class="btn btn-primary">📊 Analisar e Criar</button>
+                    </form>
+                    <div id="resultado" class="hidden"></div>
+                </div>
 
-                        <div id="summaryContent" style="display: none;">
-                            <div class="alert alert-success show">
-                                <strong>✅ Análise Concluída!</strong> Confira o resumo e os documentos que serão gerados.
-                            </div>
+                <div id="minhasPage" class="hidden">
+                    <h2>Minhas Aquisições</h2>
+                    <div id="listaAquisicoes"></div>
+                </div>
 
-                            <div class="results-card">
-                                <h3>📄 Documentos que serão gerados:</h3>
-                                <div id="documentsList"></div>
-                            </div>
-
-                            <div class="results-card">
-                                <h3>⚖️ Análise Legal:</h3>
-                                <div id="legalAnalysis"></div>
-                            </div>
-
-                            <div class="results-card">
-                                <h3>📊 Resumo da Solicitação:</h3>
-                                <div id="summaryDetails"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="button-group">
-                        <button type="button" class="btn btn-secondary" id="prevBtn" style="display: none;">← Anterior</button>
-                        <div style="flex: 1;"></div>
-                        <button type="button" class="btn btn-primary" id="nextBtn">Próximo →</button>
-                        <button type="button" class="btn btn-success" id="generateBtn" style="display: none;">📥 Gerar Documentos</button>
-                    </div>
-                </form>
+                <div id="ajudaPage" class="hidden">
+                    <h2>Ajuda</h2>
+                    <p>Sistema de geração automática de documentos para licitações.</p>
+                    <h3>Como usar:</h3>
+                    <ol>
+                        <li>Preencha o formulário de Nova Aquisição</li>
+                        <li>O sistema analisa automaticamente e gera justificativas</li>
+                        <li>Clique em "Gerar Documentos" para baixar os arquivos DOCX</li>
+                    </ol>
+                </div>
             </main>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script>
+        let aquisicaoAtual = null;
+        const API_URL = '';
+
+        function toggleHipotese(select) {
+            document.getElementById('hipoteseGroup').classList.toggle('hidden', select.value !== 'dispensa');
+        }
+
+        function showPage(page) {
+            document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+            event.target.classList.add('active');
+            ['novaPage', 'minhasPage', 'ajudaPage'].forEach(p => document.getElementById(p).classList.add('hidden'));
+            document.getElementById(page + 'Page').classList.remove('hidden');
+            if (page === 'minhas') carregarMinhasAquisicoes();
+        }
+
+        async function submitForm(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = { usuario_id: 1 };
+            formData.forEach((v, k) => data[k] = v);
+
+            try {
+                const res = await fetch(API_URL + '/api/aquisicao', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                aquisicaoAtual = result.aquisicao_id;
+                mostrarResultado(result);
+            } catch (err) {
+                alert('Erro: ' + err.message);
+            }
+        }
+
+        function mostrarResultado(result) {
+            const html = `
+                <div class="alert alert-success">✅ Aquisição criada com sucesso!</div>
+                <h3>Análise Automática:</h3>
+                <p><strong>ETP:</strong> ${result.regras.etp.tipo} - ${result.regras.etp.justificativa}</p>
+                <p><strong>Mapa de Risco:</strong> ${result.regras.mapa_risco.nivel_risco} - ${result.regras.mapa_risco.justificativa}</p>
+                <button onclick="gerarDocs()" class="btn btn-success">📥 Gerar Documentos</button>
+                <button onclick="location.reload()" class="btn btn-secondary">🏠 Voltar ao Menu</button>
+            `;
+            const div = document.getElementById('resultado');
+            div.innerHTML = html;
+            div.classList.remove('hidden');
+        }
+
+        async function gerarDocs() {
+            try {
+                const res = await fetch(API_URL + '/api/gerar-documentos/' + aquisicaoAtual, { method: 'POST' });
+                const data = await res.json();
+                let html = '<div class="alert alert-success">✅ Documentos gerados!</div><div id="documentLinks">';
+                data.documentos.forEach(doc => {
+                    html += `<a href="${doc.url}" download>${doc.tipo} - ${doc.nome}</a>`;
+                });
+                html += '</div><button onclick="location.reload()" class="btn btn-primary">🏠 Voltar ao Menu</button>';
+                document.getElementById('resultado').innerHTML = html;
+            } catch (err) {
+                alert('Erro ao gerar: ' + err.message);
+            }
+        }
+
+        async function carregarMinhasAquisicoes() {
+            try {
+                const res = await fetch(API_URL + '/api/usuario/1/aquisicoes');
+                const data = await res.json();
+                let html = data.aquisicoes.length === 0 ? '<p>Nenhuma aquisição encontrada.</p>' : '';
+                data.aquisicoes.forEach(aq => {
+                    html += `<div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0; border-radius: 6px;">
+                        <strong>${aq.tipo_contratacao.toUpperCase()}</strong>: ${aq.descricao}<br>
+                        <small>Valor: R$ ${parseFloat(aq.valor_estimado).toFixed(2)} | Criado: ${aq.criado_em}</small>
+                    </div>`;
+                });
+                document.getElementById('listaAquisicoes').innerHTML = html;
+            } catch (err) {
+                document.getElementById('listaAquisicoes').innerHTML = '<p>Erro ao carregar.</p>';
+            }
+        }
+    </script>
 </body>
 </html>

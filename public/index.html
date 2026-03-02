@@ -149,6 +149,43 @@
                                 <input type="text" class="form-control" name="cargo" required>
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label">Telefone</label>
+                            <input type="tel" class="form-control" name="telefone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Estado (UF)</label>
+                            <select class="form-select" name="estado" required>
+                                <option value="">Selecione...</option>
+                                <option value="AC">Acre</option>
+                                <option value="AL">Alagoas</option>
+                                <option value="AP">Amapá</option>
+                                <option value="AM">Amazonas</option>
+                                <option value="BA">Bahia</option>
+                                <option value="CE">Ceará</option>
+                                <option value="DF">Distrito Federal</option>
+                                <option value="ES">Espírito Santo</option>
+                                <option value="GO">Goiás</option>
+                                <option value="MA">Maranhão</option>
+                                <option value="MT">Mato Grosso</option>
+                                <option value="MS">Mato Grosso do Sul</option>
+                                <option value="MG">Minas Gerais</option>
+                                <option value="PA">Pará</option>
+                                <option value="PB">Paraíba</option>
+                                <option value="PR">Paraná</option>
+                                <option value="PE">Pernambuco</option>
+                                <option value="PI">Piauí</option>
+                                <option value="RJ">Rio de Janeiro</option>
+                                <option value="RN">Rio Grande do Norte</option>
+                                <option value="RS">Rio Grande do Sul</option>
+                                <option value="RO">Rondônia</option>
+                                <option value="RR">Roraima</option>
+                                <option value="SC">Santa Catarina</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="SE">Sergipe</option>
+                                <option value="TO">Tocantins</option>
+                            </select>
+                        </div>
                         <button type="submit" class="btn btn-primary w-100 mb-3">Criar Conta</button>
                         <p class="text-center mb-0">Já tem conta? <a href="#" onclick="showLogin()">Fazer Login</a></p>
                     </form>
@@ -375,21 +412,25 @@
             const formData = new FormData(e.target);
             const body = Object.fromEntries(formData);
             
+            console.log('Enviando login:', body);
             document.getElementById('loading').style.display = 'flex';
             try {
                 const res = await fetch(`${API_URL}/api/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
+                    body: JSON.stringify(body),
+                    credentials: 'include'
                 });
                 const data = await res.json();
+                console.log('Resposta login:', data);
                 if (data.sucesso) {
                     showApp(data.usuario);
                 } else {
                     alert(data.erro || 'Erro ao fazer login');
                 }
             } catch (err) {
-                alert('Erro de conexão');
+                console.error('Erro:', err);
+                alert('Erro de conexao: ' + err.message);
             } finally {
                 document.getElementById('loading').style.display = 'none';
             }
@@ -400,22 +441,26 @@
             const formData = new FormData(e.target);
             const body = Object.fromEntries(formData);
             
+            console.log('Enviando registro:', body);
             document.getElementById('loading').style.display = 'flex';
             try {
                 const res = await fetch(`${API_URL}/api/registro`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
+                    body: JSON.stringify(body),
+                    credentials: 'include'
                 });
                 const data = await res.json();
+                console.log('Resposta registro:', data);
                 if (data.sucesso) {
-                    alert('Cadastro realizado! Faça login.');
+                    alert('Cadastro realizado! Faca login.');
                     showLogin();
                 } else {
                     alert(data.erro || 'Erro ao cadastrar');
                 }
             } catch (err) {
-                alert('Erro de conexão');
+                console.error('Erro:', err);
+                alert('Erro de conexao: ' + err.message);
             } finally {
                 document.getElementById('loading').style.display = 'none';
             }

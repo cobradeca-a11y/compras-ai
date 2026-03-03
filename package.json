@@ -4,7 +4,7 @@
   "description": "Sistema Inteligente de Aquisições Públicas - V2.1 com Login e Correções",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "npm run build && node server.js"
     "dev": "nodemon server.js",
     "build": "vite build",
     "preview": "vite preview",

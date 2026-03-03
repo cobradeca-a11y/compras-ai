@@ -1,576 +1,695 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+<!doctype html>
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compras-AI V2.1 - Sistema Inteligente de Aquisições Públicas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <style>
-        :root {
-            --primary-color: #004a8d;
-            --secondary-color: #007bff;
-            --bg-light: #f8f9fa;
-        }
-        body {
-            background-color: var(--bg-light);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .navbar {
-            background-color: var(--primary-color);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-        .card-header {
-            background-color: #fff;
-            border-bottom: 1px solid #eee;
-            font-weight: bold;
-            color: var(--primary-color);
-            border-radius: 12px 12px 0 0 !important;
-        }
-        .btn-primary {
-            background-color: var(--primary-color);
-            border: none;
-        }
-        .btn-primary:hover {
-            background-color: #003a70;
-        }
-        #login-container, #registro-container {
-            max-width: 400px;
-            margin: 80px auto;
-        }
-        #app-container {
-            display: none;
-            padding-top: 20px;
-        }
-        .step-card {
-            display: none;
-        }
-        .step-card.active {
-            display: block;
-        }
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255,255,255,0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-        .doc-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            background: #fff;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Compras AI v2.1</title>
+  <meta name="description" content="Compras AI - geração automatizada de documentos para aquisições públicas." />
+
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#0f1a2b;
+      --muted:#9fb0c2;
+      --text:#e9f0f7;
+      --line:#20324d;
+      --accent:#3aa3ff;
+      --ok:#2dd4bf;
+      --warn:#fbbf24;
+      --bad:#fb7185;
+      --btn:#1b2a45;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background: radial-gradient(1000px 600px at 20% -10%, #19325c 0%, transparent 60%),
+                  radial-gradient(800px 500px at 90% 0%, #123a52 0%, transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:1100px; margin:0 auto; padding:20px}
+    header{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 0 6px 0;
+    }
+    .brand{
+      display:flex; gap:12px; align-items:center;
+    }
+    .logo{
+      width:40px; height:40px; border-radius:12px;
+      background: linear-gradient(135deg,#3aa3ff,#2dd4bf);
+      box-shadow: 0 10px 30px rgba(58,163,255,.25);
+    }
+    .brand h1{margin:0; font-size:18px; font-weight:750; letter-spacing:.2px}
+    .brand small{display:block; color:var(--muted); margin-top:2px}
+    .top-actions{display:flex; gap:10px; align-items:center}
+    .pill{
+      padding:6px 10px; border:1px solid var(--line); border-radius:999px;
+      color:var(--muted); font-size:12px;
+      background: rgba(255,255,255,.03);
+    }
+    .grid{
+      display:grid; gap:14px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 920px){
+      .grid{grid-template-columns: 1fr 1fr}
+      .grid.three{grid-template-columns: 1.1fr .9fr}
+    }
+    .card{
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 16px 50px rgba(0,0,0,.25);
+    }
+    .card h2{
+      margin:0 0 10px 0; font-size:14px; letter-spacing:.2px;
+      color:#cfe2f7;
+    }
+    .row{display:grid; gap:10px}
+    .row.two{grid-template-columns:1fr 1fr}
+    @media(max-width:720px){.row.two{grid-template-columns:1fr}}
+    label{display:block; font-size:12px; color:var(--muted); margin:10px 0 6px}
+    input, select, textarea{
+      width:100%;
+      background: rgba(0,0,0,.25);
+      border:1px solid var(--line);
+      color:var(--text);
+      padding:10px 10px;
+      border-radius:12px;
+      outline:none;
+    }
+    textarea{min-height:110px; resize:vertical}
+    input::placeholder, textarea::placeholder{color:#7e92aa}
+    .btn{
+      border:1px solid var(--line);
+      background: var(--btn);
+      color: var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:650;
+      transition: .15s transform, .2s opacity;
+    }
+    .btn:hover{opacity:.92}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{
+      background: linear-gradient(135deg,#3aa3ff,#2dd4bf);
+      border:0;
+      color:#071020;
+    }
+    .btn.ghost{background: transparent}
+    .btn.danger{background: rgba(251,113,133,.12); border-color: rgba(251,113,133,.35)}
+    .hint{color:var(--muted); font-size:12px; line-height:1.4}
+    .sep{height:1px; background: var(--line); margin:12px 0}
+    .hidden{display:none !important}
+
+    .toast{
+      margin: 10px 0 0;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.25);
+      font-size: 13px;
+      white-space: pre-wrap;
+    }
+    .toast.ok{border-color: rgba(45,212,191,.35); background: rgba(45,212,191,.08)}
+    .toast.bad{border-color: rgba(251,113,133,.40); background: rgba(251,113,133,.10)}
+    .toast.warn{border-color: rgba(251,191,36,.40); background: rgba(251,191,36,.08)}
+    .kvs{
+      display:grid; gap:8px;
+      grid-template-columns: 1fr;
+      margin-top:10px;
+    }
+    .kv{
+      padding:10px; border:1px solid var(--line); border-radius:12px;
+      background: rgba(0,0,0,.18);
+    }
+    .kv b{display:block; font-size:12px; color:#cfe2f7; margin-bottom:4px}
+    .kv span{display:block; color:var(--muted); font-size:12px; line-height:1.35}
+    .list{
+      display:flex; flex-direction:column; gap:10px;
+      margin-top:10px;
+    }
+    .item{
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      border-radius:14px;
+      padding:10px;
+    }
+    .item-head{
+      display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
+    }
+    .item-title{font-weight:800; font-size:13px; margin:0}
+    .item-sub{color:var(--muted); font-size:12px; margin-top:4px}
+    .tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
+    .tag{
+      font-size:11px; padding:5px 8px; border-radius:999px;
+      border:1px solid var(--line);
+      color: var(--muted);
+      background: rgba(255,255,255,.03);
+    }
+    .tag.ok{border-color: rgba(45,212,191,.35); color:#a7f3d0}
+    .tag.warn{border-color: rgba(251,191,36,.35); color:#fde68a}
+    .tag.bad{border-color: rgba(251,113,133,.35); color:#fecdd3}
+    footer{color:var(--muted); font-size:12px; padding:18px 0 6px}
+  </style>
 </head>
+
 <body>
-
-    <div class="loading-overlay" id="loading">
-        <div class="text-center">
-            <div class="spinner-border text-primary" role="status"></div>
-            <p class="mt-2 fw-bold">Processando...</p>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Compras AI <span class="pill">v2.1</span></h1>
+          <small>Login + histórico por usuário + DOCX</small>
         </div>
-    </div>
+      </div>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="#"><i class="bi bi-robot"></i> Compras-AI <small class="fs-6">V2.1</small></a>
-            <div class="ms-auto d-flex align-items-center" id="user-info" style="display: none !important;">
-                <span class="text-white me-3" id="nav-user-name"></span>
-                <button class="btn btn-outline-light btn-sm" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Sair</button>
+      <div class="top-actions">
+        <span id="sessaoPill" class="pill">Verificando sessão…</span>
+        <button id="btnLogout" class="btn danger hidden" type="button" onclick="logout()">Sair</button>
+      </div>
+    </header>
+
+    <!-- AUTH -->
+    <section id="auth" class="grid">
+      <div class="card">
+        <h2>Entrar</h2>
+        <div class="hint">Use seu email e senha. O login cria uma sessão (cookie) no servidor.</div>
+
+        <label>Email</label>
+        <input id="loginEmail" type="email" placeholder="ex: seuemail@org.br" autocomplete="email">
+
+        <label>Senha</label>
+        <input id="loginSenha" type="password" placeholder="••••••••" autocomplete="current-password">
+
+        <div style="display:flex; gap:10px; margin-top:12px">
+          <button class="btn primary" type="button" onclick="login()">Entrar</button>
+          <button class="btn ghost" type="button" onclick="checkSession(true)">Recarregar sessão</button>
+        </div>
+
+        <div id="authToast" class="toast hidden"></div>
+      </div>
+
+      <div class="card">
+        <h2>Cadastrar</h2>
+        <div class="hint">Cadastro cria o usuário no SQLite e permite login em seguida.</div>
+
+        <div class="row two">
+          <div>
+            <label>Nome</label>
+            <input id="regNome" type="text" placeholder="Nome completo">
+          </div>
+          <div>
+            <label>Telefone</label>
+            <input id="regTelefone" type="text" placeholder="(xx) xxxxx-xxxx">
+          </div>
+        </div>
+
+        <label>Email</label>
+        <input id="regEmail" type="email" placeholder="ex: seuemail@org.br">
+
+        <label>Senha</label>
+        <input id="regSenha" type="password" placeholder="Crie uma senha">
+
+        <div class="row two">
+          <div>
+            <label>Unidade/Órgão</label>
+            <input id="regUnidade" type="text" placeholder="Ex: E.R.G. Marinha - Rio Grande">
+          </div>
+          <div>
+            <label>Cargo/Função</label>
+            <input id="regCargo" type="text" placeholder="Ex: Encarregado de Compras">
+          </div>
+        </div>
+
+        <label>Estado (UF)</label>
+        <input id="regEstado" type="text" placeholder="Ex: RS" maxlength="2">
+
+        <div style="display:flex; gap:10px; margin-top:12px">
+          <button class="btn primary" type="button" onclick="registro()">Cadastrar</button>
+        </div>
+
+        <div id="regToast" class="toast hidden"></div>
+      </div>
+    </section>
+
+    <!-- APP -->
+    <section id="app" class="hidden">
+      <div class="grid three" style="margin-top:10px">
+        <div class="card">
+          <h2>Nova aquisição</h2>
+          <div class="hint">
+            Preencha o básico. O backend faz a análise inteligente (modalidade/necessidade/normas/garantia)
+            e decide automaticamente ETP e Mapa de Risco pelas regras do ZIP.
+          </div>
+
+          <div class="row two">
+            <div>
+              <label>Modalidade</label>
+              <select id="aModalidade">
+                <option value="DISPENSA">DISPENSA</option>
+                <option value="INEXIGIBILIDADE">INEXIGIBILIDADE</option>
+                <option value="PREGAO">PREGÃO</option>
+                <option value="CONCORRENCIA">CONCORRÊNCIA</option>
+                <option value="OUTRA">OUTRA</option>
+              </select>
             </div>
-        </div>
-    </nav>
-
-    <div class="container">
-        
-        <!-- Login -->
-        <div id="login-container">
-            <div class="card">
-                <div class="card-body p-4">
-                    <h3 class="text-center mb-4">Login</h3>
-                    <form id="login-form">
-                        <div class="mb-3">
-                            <label class="form-label">E-mail</label>
-                            <input type="email" class="form-control" name="email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Senha</label>
-                            <input type="password" class="form-control" name="senha" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100 mb-3">Entrar</button>
-                        <p class="text-center mb-0">Não tem conta? <a href="#" onclick="showRegistro()">Cadastre-se</a></p>
-                    </form>
-                </div>
+            <div>
+              <label>Hipótese (se dispensa/inexig.)</label>
+              <input id="aHipotese" type="text" placeholder="Ex: Art. 75, II (se aplicável)">
             </div>
-        </div>
+          </div>
 
-        <!-- Registro -->
-        <div id="registro-container" style="display: none;">
-            <div class="card">
-                <div class="card-body p-4">
-                    <h3 class="text-center mb-4">Cadastro</h3>
-                    <form id="registro-form">
-                        <div class="mb-3">
-                            <label class="form-label">Nome Completo</label>
-                            <input type="text" class="form-control" name="nome" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">E-mail Institucional</label>
-                            <input type="email" class="form-control" name="email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Senha</label>
-                            <input type="password" class="form-control" name="senha" required>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Unidade/Órgão</label>
-                                <input type="text" class="form-control" name="unidade" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Cargo</label>
-                                <input type="text" class="form-control" name="cargo" required>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Telefone</label>
-                            <input type="tel" class="form-control" name="telefone" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Estado (UF)</label>
-                            <select class="form-select" name="estado" required>
-                                <option value="">Selecione...</option>
-                                <option value="AC">Acre</option>
-                                <option value="AL">Alagoas</option>
-                                <option value="AP">Amapá</option>
-                                <option value="AM">Amazonas</option>
-                                <option value="BA">Bahia</option>
-                                <option value="CE">Ceará</option>
-                                <option value="DF">Distrito Federal</option>
-                                <option value="ES">Espírito Santo</option>
-                                <option value="GO">Goiás</option>
-                                <option value="MA">Maranhão</option>
-                                <option value="MT">Mato Grosso</option>
-                                <option value="MS">Mato Grosso do Sul</option>
-                                <option value="MG">Minas Gerais</option>
-                                <option value="PA">Pará</option>
-                                <option value="PB">Paraíba</option>
-                                <option value="PR">Paraná</option>
-                                <option value="PE">Pernambuco</option>
-                                <option value="PI">Piauí</option>
-                                <option value="RJ">Rio de Janeiro</option>
-                                <option value="RN">Rio Grande do Norte</option>
-                                <option value="RS">Rio Grande do Sul</option>
-                                <option value="RO">Rondônia</option>
-                                <option value="RR">Roraima</option>
-                                <option value="SC">Santa Catarina</option>
-                                <option value="SP">São Paulo</option>
-                                <option value="SE">Sergipe</option>
-                                <option value="TO">Tocantins</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100 mb-3">Criar Conta</button>
-                        <p class="text-center mb-0">Já tem conta? <a href="#" onclick="showLogin()">Fazer Login</a></p>
-                    </form>
-                </div>
+          <div class="row two">
+            <div>
+              <label>Tipo de contratação</label>
+              <select id="aTipo">
+                <option value="PONTUAL">PONTUAL</option>
+                <option value="CONTINUADA">CONTINUADA</option>
+              </select>
             </div>
-        </div>
-
-        <!-- App Principal -->
-        <div id="app-container">
-            <div class="row">
-                <!-- Menu Lateral -->
-                <div class="col-md-3">
-                    <div class="list-group mb-4">
-                        <button class="list-group-item list-group-item-action active" onclick="showSection('nova-aquisicao')">
-                            <i class="bi bi-plus-circle me-2"></i> Nova Aquisição
-                        </button>
-                        <button class="list-group-item list-group-item-action" onclick="showSection('historico')">
-                            <i class="bi bi-clock-history me-2"></i> Meu Histórico
-                        </button>
-                    </div>
-                    
-                    <div class="card bg-primary text-white">
-                        <div class="card-body">
-                            <h6><i class="bi bi-info-circle"></i> Dica AI</h6>
-                            <p class="small mb-0">Descreva o objeto com clareza para que a inteligência possa sugerir as melhores justificativas e normas.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Conteúdo Principal -->
-                <div class="col-md-9">
-                    
-                    <!-- Seção: Nova Aquisição -->
-                    <div id="section-nova-aquisicao" class="app-section">
-                        <div class="card">
-                            <div class="card-header">Dados da Aquisição</div>
-                            <div class="card-body">
-                                <form id="aquisicao-form">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Modalidade</label>
-                                            <select class="form-select" name="modalidade" id="modalidade" required>
-                                                <option value="dispensa">Dispensa de Licitação (Art. 75)</option>
-                                                <option value="pregao">Pregão Eletrônico</option>
-                                                <option value="concorrencia">Concorrência</option>
-                                                <option value="inexigibilidade">Inexigibilidade</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-6 mb-3" id="hipotese-container">
-                                            <label class="form-label">Hipótese de Dispensa</label>
-                                            <select class="form-select" name="hipotese_dispensa">
-                                                <option value="I">Inciso I (Obras/Engenharia até 100k)</option>
-                                                <option value="II" selected>Inciso II (Outros até 50k)</option>
-                                                <option value="VIII">Inciso VIII (Emergencial)</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Tipo de Contratação</label>
-                                            <select class="form-select" name="tipo_contratacao" required>
-                                                <option value="produto">Aquisição de Bens/Produtos</option>
-                                                <option value="servico">Prestação de Serviços</option>
-                                                <option value="obra">Obras de Engenharia</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Complexidade</label>
-                                            <select class="form-select" name="complexidade">
-                                                <option value="baixa">Baixa (Padronizado)</option>
-                                                <option value="media">Média</option>
-                                                <option value="alta">Alta (Especializado)</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Descrição do Objeto</label>
-                                        <textarea class="form-control" name="descricao" rows="3" placeholder="Ex: Aquisição de notebooks para o setor de TI..." required></textarea>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-4 mb-3">
-                                            <label class="form-label">Quantidade</label>
-                                            <input type="number" class="form-control" name="quantidade" value="1" required>
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <label class="form-label">Valor Estimado (R$)</label>
-                                            <input type="number" step="0.01" class="form-control" name="valor_estimado" placeholder="0,00" required>
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <label class="form-label">Prazo (Dias)</label>
-                                            <input type="number" class="form-control" name="prazo" value="30" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Observações Adicionais</label>
-                                        <textarea class="form-control" name="observacoes" rows="2"></textarea>
-                                    </div>
-
-                                    <button type="submit" class="btn btn-primary btn-lg w-100">
-                                        <i class="bi bi-magic"></i> Analisar e Gerar Documentos
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Seção: Resultado -->
-                    <div id="section-resultado" class="app-section" style="display: none;">
-                        <div class="card border-success">
-                            <div class="card-header bg-success text-white">Análise Concluída com Sucesso!</div>
-                            <div class="card-body">
-                                <div class="alert alert-info">
-                                    <h5><i class="bi bi-check-circle"></i> Documentos Gerados</h5>
-                                    <p>Com base na Lei 14.133/2021, o sistema gerou os seguintes artefatos:</p>
-                                </div>
-
-                                <div id="documentos-lista">
-                                    <!-- JS preenche aqui -->
-                                </div>
-
-                                <div class="mt-4 d-flex gap-2">
-                                    <button class="btn btn-outline-primary" onclick="showSection('nova-aquisicao')">
-                                        <i class="bi bi-plus-lg"></i> Nova Aquisição
-                                    </button>
-                                    <button class="btn btn-primary" onclick="showSection('historico')">
-                                        <i class="bi bi-list-ul"></i> Ver Meu Histórico
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Seção: Histórico -->
-                    <div id="section-historico" class="app-section" style="display: none;">
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <span>Meu Histórico de Aquisições</span>
-                                <button class="btn btn-sm btn-outline-secondary" onclick="carregarHistorico()"><i class="bi bi-arrow-clockwise"></i> Atualizar</button>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Data</th>
-                                                <th>Objeto</th>
-                                                <th>Modalidade</th>
-                                                <th>Valor</th>
-                                                <th>Ações</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="historico-tabela">
-                                            <!-- JS preenche aqui -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+            <div>
+              <label>Complexidade</label>
+              <select id="aComplexidade">
+                <option value="BAIXA">BAIXA</option>
+                <option value="MEDIA">MÉDIA</option>
+                <option value="ALTA">ALTA</option>
+              </select>
             </div>
+          </div>
+
+          <label>Descrição do objeto</label>
+          <textarea id="aDescricao" placeholder="Ex: Aquisição de tinta acrílica para manutenção predial..."></textarea>
+
+          <div class="row two">
+            <div>
+              <label>Quantidade</label>
+              <input id="aQuantidade" type="text" placeholder="Ex: 10 latas de 18L">
+            </div>
+            <div>
+              <label>Valor estimado (R$)</label>
+              <input id="aValor" type="number" step="0.01" placeholder="Ex: 3500.00">
+            </div>
+          </div>
+
+          <div class="row two">
+            <div>
+              <label>Prazo (dias)</label>
+              <input id="aPrazo" type="number" step="1" placeholder="Ex: 30">
+            </div>
+            <div>
+              <label>Observações</label>
+              <input id="aObs" type="text" placeholder="Opcional">
+            </div>
+          </div>
+
+          <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap">
+            <button class="btn primary" type="button" onclick="criarAquisicao()">Salvar aquisição</button>
+            <button class="btn" type="button" onclick="carregarMinhasAquisicoes()">Atualizar lista</button>
+            <button class="btn ghost" type="button" onclick="finalizarVoltarMenu()">Finalizar e voltar ao menu</button>
+          </div>
+
+          <div id="appToast" class="toast hidden"></div>
+
+          <div id="analiseBox" class="kvs hidden"></div>
         </div>
-    </div>
 
-    <script>
-        const API_URL = ''; // URL relativa
+        <div class="card">
+          <h2>Minhas aquisições</h2>
+          <div class="hint">Clique em uma aquisição para ver detalhes e gerar documentos.</div>
 
-        // --- Navegação ---
-        function showLogin() {
-            document.getElementById('login-container').style.display = 'block';
-            document.getElementById('registro-container').style.display = 'none';
-            document.getElementById('app-container').style.display = 'none';
-            document.getElementById('user-info').style.display = 'none';
+          <div id="listaAquisicoes" class="list"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <h2>Detalhes da aquisição</h2>
+        <div id="detalhes" class="hint">Selecione uma aquisição para ver os detalhes aqui.</div>
+        <div class="sep"></div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap">
+          <button id="btnGerarDocs" class="btn primary hidden" type="button" onclick="gerarDocumentos()">Gerar documentos (DOCX)</button>
+          <span id="docsHint" class="hint"></span>
+        </div>
+        <div id="docsBox" class="kvs hidden"></div>
+      </div>
+    </section>
+
+    <footer>
+      Backend: Express + SQLite + Sessões (cookie) • Rotas: <code>/api/*</code> • Arquivos gerados em <code>/documentos</code>
+    </footer>
+  </div>
+
+  <script>
+    // ========= CONFIG =========
+    // Como o index.html será servido pelo mesmo servidor (express.static('public')),
+    // usamos base vazia. Mantemos credentials para garantir cookie de sessão.
+    const API_BASE = '';
+    let aquisicaoSelecionada = null;
+
+    function qs(id){ return document.getElementById(id); }
+
+    function toast(el, msg, type='ok'){
+      el.classList.remove('hidden','ok','bad','warn');
+      el.classList.add(type);
+      el.textContent = msg;
+    }
+    function clearToast(el){
+      el.classList.add('hidden');
+      el.textContent = '';
+      el.classList.remove('ok','bad','warn');
+    }
+
+    async function api(path, options={}){
+      const res = await fetch(API_BASE + path, {
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json', ...(options.headers||{}) },
+        ...options
+      });
+      const data = await res.json().catch(()=> ({}));
+      if(!res.ok){
+        const msg = data?.erro || data?.mensagem || ('Erro HTTP ' + res.status);
+        throw new Error(msg);
+      }
+      return data;
+    }
+
+    // ========= SESSION / UI STATE =========
+    function setAuthedUI(authed, usuario){
+      qs('auth').classList.toggle('hidden', authed);
+      qs('app').classList.toggle('hidden', !authed);
+      qs('btnLogout').classList.toggle('hidden', !authed);
+
+      if(authed){
+        qs('sessaoPill').textContent = `Logado: ${usuario?.nome || 'Usuário'} (${usuario?.email || ''})`;
+      }else{
+        qs('sessaoPill').textContent = 'Não autenticado';
+      }
+    }
+
+    async function checkSession(silent=false){
+      try{
+        const s = await api('/api/sessao', { method:'GET' });
+        if(s.autenticado){
+          setAuthedUI(true, s.usuario);
+          if(!silent){
+            toast(qs('authToast'), 'Sessão ativa ✅', 'ok');
+            setTimeout(()=>clearToast(qs('authToast')), 1500);
+          }
+          await carregarMinhasAquisicoes();
+          return;
+        }
+        setAuthedUI(false);
+        if(!silent) toast(qs('authToast'), 'Você não está logado.', 'warn');
+      }catch(e){
+        setAuthedUI(false);
+        if(!silent) toast(qs('authToast'), 'Falha ao verificar sessão: ' + e.message, 'bad');
+      }
+    }
+
+    // ========= AUTH =========
+    async function login(){
+      const el = qs('authToast'); clearToast(el);
+      const email = qs('loginEmail').value.trim();
+      const senha = qs('loginSenha').value;
+      if(!email || !senha) return toast(el,'Informe email e senha.', 'warn');
+
+      try{
+        const r = await api('/api/login', {
+          method:'POST',
+          body: JSON.stringify({ email, senha })
+        });
+        toast(el, 'Login OK ✅', 'ok');
+        setAuthedUI(true, r.usuario);
+        await carregarMinhasAquisicoes();
+      }catch(e){
+        toast(el, e.message, 'bad');
+      }
+    }
+
+    async function registro(){
+      const el = qs('regToast'); clearToast(el);
+
+      const nome = qs('regNome').value.trim();
+      const email = qs('regEmail').value.trim();
+      const senha = qs('regSenha').value;
+      const telefone = qs('regTelefone').value.trim();
+      const unidade = qs('regUnidade').value.trim();
+      const cargo = qs('regCargo').value.trim();
+      const estado = qs('regEstado').value.trim().toUpperCase();
+
+      if(!nome || !email || !senha || !unidade){
+        return toast(el,'Preencha pelo menos: Nome, Email, Senha e Unidade.', 'warn');
+      }
+
+      try{
+        await api('/api/registro', {
+          method:'POST',
+          body: JSON.stringify({ nome, email, senha, telefone, unidade, cargo, estado })
+        });
+        toast(el, 'Cadastro realizado ✅ Agora faça login.', 'ok');
+      }catch(e){
+        toast(el, e.message, 'bad');
+      }
+    }
+
+    async function logout(){
+      try{
+        await api('/api/logout', { method:'POST', body: JSON.stringify({}) });
+      }catch(e){ /* ignore */ }
+      aquisicaoSelecionada = null;
+      qs('listaAquisicoes').innerHTML = '';
+      qs('detalhes').textContent = 'Selecione uma aquisição para ver os detalhes aqui.';
+      qs('btnGerarDocs').classList.add('hidden');
+      qs('docsBox').classList.add('hidden');
+      qs('docsHint').textContent = '';
+      setAuthedUI(false);
+    }
+
+    // ========= AQUISIÇÕES =========
+    function renderAnalise(analise, regras){
+      const box = qs('analiseBox');
+      box.innerHTML = '';
+
+      const items = [
+        ['Justificativa da modalidade', analise?.justificativa_modalidade],
+        ['Justificativa da necessidade', analise?.justificativa_necessidade],
+        ['Normas aplicáveis', analise?.normas_aplicaveis],
+        ['Garantia (meses)', analise?.garantia_meses],
+        ['ETP', regras?.etp?.gera ? 'SIM' : 'NÃO'],
+        ['Motivo ETP', regras?.etp?.justificativa],
+        ['Mapa de Risco', regras?.mapa_risco?.gera ? 'SIM' : 'NÃO'],
+        ['Motivo Mapa de Risco', regras?.mapa_risco?.justificativa],
+      ];
+
+      for(const [k,v] of items){
+        const div = document.createElement('div');
+        div.className = 'kv';
+        div.innerHTML = `<b>${escapeHtml(k)}</b><span>${escapeHtml(String(v ?? ''))}</span>`;
+        box.appendChild(div);
+      }
+      box.classList.remove('hidden');
+    }
+
+    async function criarAquisicao(){
+      const el = qs('appToast'); clearToast(el);
+
+      const payload = {
+        modalidade: qs('aModalidade').value,
+        hipotese_dispensa: qs('aHipotese').value.trim(),
+        tipo_contratacao: qs('aTipo').value,
+        descricao: qs('aDescricao').value.trim(),
+        quantidade: qs('aQuantidade').value.trim(),
+        valor_estimado: qs('aValor').value ? Number(qs('aValor').value) : null,
+        complexidade: qs('aComplexidade').value,
+        prazo: qs('aPrazo').value ? Number(qs('aPrazo').value) : null,
+        observacoes: qs('aObs').value.trim()
+      };
+
+      if(!payload.descricao) return toast(el,'Descreva o objeto da aquisição.', 'warn');
+      if(!payload.tipo_contratacao) return toast(el,'Informe o tipo de contratação.', 'warn');
+
+      try{
+        const r = await api('/api/aquisicao', { method:'POST', body: JSON.stringify(payload) });
+        toast(el, `Aquisição criada ✅ ID: ${r.aquisicao_id}`, 'ok');
+
+        renderAnalise(r.analise, r.regras);
+        await carregarMinhasAquisicoes();
+
+        // Seleciona automaticamente a aquisição recém criada
+        await selecionarAquisicao(r.aquisicao_id);
+      }catch(e){
+        toast(el, e.message, 'bad');
+      }
+    }
+
+    async function carregarMinhasAquisicoes(){
+      const list = qs('listaAquisicoes');
+      list.innerHTML = '<div class="hint">Carregando…</div>';
+
+      try{
+        const r = await api('/api/minhas-aquisicoes', { method:'GET' });
+        if(!r.aquisicoes?.length){
+          list.innerHTML = '<div class="hint">Nenhuma aquisição ainda. Crie uma ao lado.</div>';
+          return;
         }
 
-        function showRegistro() {
-            document.getElementById('login-container').style.display = 'none';
-            document.getElementById('registro-container').style.display = 'block';
+        list.innerHTML = '';
+        for(const a of r.aquisicoes){
+          const div = document.createElement('div');
+          div.className = 'item';
+          div.innerHTML = `
+            <div class="item-head">
+              <div>
+                <div class="item-title">#${a.id} • ${escapeHtml(a.descricao?.slice(0,80) || 'Sem descrição')}${a.descricao?.length>80?'…':''}</div>
+                <div class="item-sub">${escapeHtml(a.modalidade)} • ${escapeHtml(a.tipo_contratacao)} • ${formatMoney(a.valor_estimado)}</div>
+              </div>
+              <button class="btn" type="button" data-id="${a.id}">Abrir</button>
+            </div>
+            <div class="tags">
+              <span class="tag ${a.gera_etp==='SIM'?'warn':''}">ETP: ${escapeHtml(a.gera_etp || '—')}</span>
+              <span class="tag ${a.gera_mapa_risco==='SIM'?'warn':''}">Mapa de Risco: ${escapeHtml(a.gera_mapa_risco || '—')}</span>
+              <span class="tag">Complex.: ${escapeHtml(a.complexidade || '—')}</span>
+              <span class="tag">Prazo: ${escapeHtml(String(a.prazo ?? '—'))} dias</span>
+            </div>
+          `;
+          div.querySelector('button').addEventListener('click', ()=> selecionarAquisicao(a.id));
+          list.appendChild(div);
+        }
+      }catch(e){
+        list.innerHTML = `<div class="toast bad">Erro: ${escapeHtml(e.message)}</div>`;
+      }
+    }
+
+    async function selecionarAquisicao(id){
+      const det = qs('detalhes');
+      qs('docsBox').classList.add('hidden');
+      qs('docsHint').textContent = '';
+      qs('btnGerarDocs').classList.add('hidden');
+
+      det.textContent = 'Carregando detalhes…';
+
+      try{
+        const r = await api('/api/aquisicao/' + id, { method:'GET' });
+        aquisicaoSelecionada = r.aquisicao;
+
+        det.innerHTML = `
+          <div class="kvs">
+            ${kv('ID', aquisicaoSelecionada.id)}
+            ${kv('Modalidade', aquisicaoSelecionada.modalidade)}
+            ${kv('Hipótese', aquisicaoSelecionada.hipotese_dispensa || '—')}
+            ${kv('Tipo', aquisicaoSelecionada.tipo_contratacao)}
+            ${kv('Descrição', aquisicaoSelecionada.descricao)}
+            ${kv('Quantidade', aquisicaoSelecionada.quantidade || '—')}
+            ${kv('Valor estimado', formatMoney(aquisicaoSelecionada.valor_estimado))}
+            ${kv('Complexidade', aquisicaoSelecionada.complexidade || '—')}
+            ${kv('Prazo (dias)', aquisicaoSelecionada.prazo ?? '—')}
+            ${kv('ETP', `${aquisicaoSelecionada.gera_etp} — ${aquisicaoSelecionada.motivo_etp || ''}`)}
+            ${kv('Mapa de Risco', `${aquisicaoSelecionada.gera_mapa_risco} — ${aquisicaoSelecionada.motivo_mapa_risco || ''}`)}
+            ${kv('Normas aplicáveis', aquisicaoSelecionada.normas_aplicaveis || '—')}
+            ${kv('Garantia (meses)', aquisicaoSelecionada.garantia_meses ?? '—')}
+            ${kv('Observações', aquisicaoSelecionada.observacoes || '—')}
+          </div>
+        `;
+
+        qs('btnGerarDocs').classList.remove('hidden');
+        qs('docsHint').textContent = 'Ao gerar, os arquivos DOCX aparecem aqui para baixar.';
+      }catch(e){
+        det.textContent = 'Erro: ' + e.message;
+      }
+    }
+
+    async function gerarDocumentos(){
+      if(!aquisicaoSelecionada?.id) return;
+
+      const btn = qs('btnGerarDocs');
+      btn.disabled = true;
+      qs('docsHint').textContent = 'Gerando documentos…';
+
+      try{
+        const r = await api('/api/gerar-documentos/' + aquisicaoSelecionada.id, {
+          method:'POST',
+          body: JSON.stringify({})
+        });
+
+        const box = qs('docsBox');
+        box.innerHTML = '';
+
+        for(const d of (r.documentos || [])){
+          const div = document.createElement('div');
+          div.className = 'kv';
+          div.innerHTML = `
+            <b>${escapeHtml(d.tipo)}</b>
+            <span><a href="${escapeAttr(d.url)}" target="_blank" rel="noopener">Baixar: ${escapeHtml(d.nome)}</a></span>
+          `;
+          box.appendChild(div);
         }
 
-        function showApp(usuario) {
-            document.getElementById('login-container').style.display = 'none';
-            document.getElementById('registro-container').style.display = 'none';
-            document.getElementById('app-container').style.display = 'block';
-            document.getElementById('user-info').style.setProperty('display', 'flex', 'important');
-            document.getElementById('nav-user-name').innerText = `Olá, ${usuario.nome}`;
-            showSection('nova-aquisicao');
+        box.classList.remove('hidden');
+        qs('docsHint').textContent = 'Documentos gerados ✅ (clique para baixar).';
+      }catch(e){
+        qs('docsHint').textContent = 'Erro ao gerar: ' + e.message;
+      }finally{
+        btn.disabled = false;
+      }
+    }
+
+    function finalizarVoltarMenu(){
+      // Reset visual "menu": limpa seleção e documentos
+      aquisicaoSelecionada = null;
+      qs('detalhes').textContent = 'Selecione uma aquisição para ver os detalhes aqui.';
+      qs('docsBox').classList.add('hidden');
+      qs('btnGerarDocs').classList.add('hidden');
+      qs('docsHint').textContent = '';
+      clearToast(qs('appToast'));
+      qs('analiseBox').classList.add('hidden');
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    // ========= HELPERS =========
+    function kv(k,v){
+      return `
+        <div class="kv">
+          <b>${escapeHtml(String(k))}</b>
+          <span>${escapeHtml(String(v ?? ''))}</span>
+        </div>
+      `;
+    }
+    function formatMoney(v){
+      if(v === null || v === undefined || v === '') return '—';
+      const n = Number(v);
+      if(Number.isNaN(n)) return String(v);
+      return n.toLocaleString('pt-BR', { style:'currency', currency:'BRL' });
+    }
+    function escapeHtml(str){
+      return String(str).replace(/[&<>"']/g, s => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[s]));
+    }
+    function escapeAttr(str){
+      return escapeHtml(str).replace(/"/g,'&quot;');
+    }
+
+    // ========= INIT =========
+    (async function init(){
+      await checkSession(true);
+
+      // ping opcional
+      try{
+        const h = await api('/health', { method:'GET', headers:{} });
+        // não é essencial, mas ajuda a confirmar que servidor está vivo
+        if(h?.mensagem){
+          qs('sessaoPill').textContent = qs('sessaoPill').textContent + ' • ' + h.mensagem;
         }
-
-        function showSection(sectionId) {
-            document.querySelectorAll('.app-section').forEach(s => s.style.display = 'none');
-            document.getElementById(`section-${sectionId}`).style.display = 'block';
-            
-            document.querySelectorAll('.list-group-item').forEach(item => {
-                item.classList.remove('active');
-                if(item.getAttribute('onclick').includes(sectionId)) item.classList.add('active');
-            });
-
-            if(sectionId === 'historico') carregarHistorico();
-        }
-
-        // --- Autenticação ---
-        async function verificarSessao() {
-            try {
-                const res = await fetch(`${API_URL}/api/sessao`);
-                const data = await res.json();
-                if (data.autenticado) {
-                    showApp(data.usuario);
-                } else {
-                    showLogin();
-                }
-            } catch (e) {
-                showLogin();
-            }
-        }
-
-        document.getElementById('login-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const body = Object.fromEntries(formData);
-            
-            console.log('Enviando login:', body);
-            document.getElementById('loading').style.display = 'flex';
-            try {
-                const res = await fetch(`${API_URL}/api/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body),
-                    credentials: 'include'
-                });
-                const data = await res.json();
-                console.log('Resposta login:', data);
-                if (data.sucesso) {
-                    showApp(data.usuario);
-                } else {
-                    alert(data.erro || 'Erro ao fazer login');
-                }
-            } catch (err) {
-                console.error('Erro:', err);
-                alert('Erro de conexao: ' + err.message);
-            } finally {
-                document.getElementById('loading').style.display = 'none';
-            }
-        };
-
-        document.getElementById('registro-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const body = Object.fromEntries(formData);
-            
-            console.log('Enviando registro:', body);
-            document.getElementById('loading').style.display = 'flex';
-            try {
-                const res = await fetch(`${API_URL}/api/registro`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body),
-                    credentials: 'include'
-                });
-                const data = await res.json();
-                console.log('Resposta registro:', data);
-                if (data.sucesso) {
-                    alert('Cadastro realizado! Faca login.');
-                    showLogin();
-                } else {
-                    alert(data.erro || 'Erro ao cadastrar');
-                }
-            } catch (err) {
-                console.error('Erro:', err);
-                alert('Erro de conexao: ' + err.message);
-            } finally {
-                document.getElementById('loading').style.display = 'none';
-            }
-        };
-
-        async function logout() {
-            await fetch(`${API_URL}/api/logout`, { method: 'POST' });
-            location.reload();
-        }
-
-        // --- Aquisição ---
-        document.getElementById('modalidade').onchange = (e) => {
-            document.getElementById('hipotese-container').style.display = 
-                e.target.value === 'dispensa' ? 'block' : 'none';
-        };
-
-        document.getElementById('aquisicao-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const body = Object.fromEntries(formData);
-            
-            document.getElementById('loading').style.display = 'flex';
-            try {
-                // 1. Criar Aquisição
-                const resAquisicao = await fetch(`${API_URL}/api/aquisicao`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
-                });
-                const dataAquisicao = await resAquisicao.json();
-                
-                if (!dataAquisicao.sucesso) throw new Error(dataAquisicao.erro);
-
-                // 2. Gerar Documentos
-                const resDocs = await fetch(`${API_URL}/api/gerar-documentos/${dataAquisicao.aquisicao_id}`, {
-                    method: 'POST'
-                });
-                const dataDocs = await resDocs.json();
-
-                if (dataDocs.sucesso) {
-                    renderizarDocumentos(dataDocs.documentos);
-                    showSection('resultado');
-                } else {
-                    alert('Erro ao gerar documentos');
-                }
-            } catch (err) {
-                alert('Erro: ' + err.message);
-            } finally {
-                document.getElementById('loading').style.display = 'none';
-            }
-        };
-
-        function renderizarDocumentos(docs) {
-            const container = document.getElementById('documentos-lista');
-            container.innerHTML = docs.map(doc => `
-                <div class="doc-item">
-                    <div>
-                        <i class="bi bi-file-earmark-word text-primary fs-4 me-2"></i>
-                        <strong>${doc.tipo}</strong> - ${doc.nome}
-                    </div>
-                    <a href="${doc.url}" class="btn btn-sm btn-success" download>
-                        <i class="bi bi-download"></i> Baixar
-                    </a>
-                </div>
-            `).join('');
-        }
-
-        async function carregarHistorico() {
-            const tbody = document.getElementById('historico-tabela');
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center">Carregando...</td></tr>';
-            
-            try {
-                const res = await fetch(`${API_URL}/api/minhas-aquisicoes`);
-                const data = await res.json();
-                
-                if (data.sucesso && data.aquisicoes.length > 0) {
-                    tbody.innerHTML = data.aquisicoes.map(aq => `
-                        <tr>
-                            <td>${new Date(aq.criado_em).toLocaleDateString()}</td>
-                            <td class="text-truncate" style="max-width: 200px;">${aq.descricao}</td>
-                            <td><span class="badge bg-secondary">${aq.modalidade.toUpperCase()}</span></td>
-                            <td>R$ ${parseFloat(aq.valor_estimado).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-primary" onclick="verDetalhes(${aq.id})">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `).join('');
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="5" class="text-center">Nenhuma aquisição encontrada.</td></tr>';
-                }
-            } catch (e) {
-                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Erro ao carregar.</td></tr>';
-            }
-        }
-
-        async function verDetalhes(id) {
-            document.getElementById('loading').style.display = 'flex';
-            try {
-                // Aqui poderíamos abrir um modal com os detalhes e links dos documentos
-                // Por simplicidade, vamos apenas alertar que os documentos estão no servidor
-                alert('Detalhes da aquisição ID: ' + id + '\nOs documentos gerados podem ser acessados no servidor.');
-            } finally {
-                document.getElementById('loading').style.display = 'none';
-            }
-        }
-
-        // Iniciar
-        verificarSessao();
-    </script>
+      }catch(e){ /* ignore */ }
+    })();
+  </script>
 </body>
 </html>

@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compras-AI V2.1 - Login</title>
+    <title>Compras-AI V2.1 - Login Obrigatório</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
         .container { max-width: 1200px; margin: 0 auto; }
         .header { background: white; border-radius: 12px; padding: 20px 30px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .logo { display: flex; gap: 12px; align-items: center; }
@@ -38,7 +38,7 @@
         .alert-success { background: #d1fae5; color: #065f46; border-left: 5px solid #10b981; }
         .alert-info { background: #dbeafe; color: #1e40af; border-left: 5px solid #2563eb; }
         .alert-error { background: #fee2e2; color: #991b1b; border-left: 5px solid #ef4444; }
-        #documentLinks { margin-top: 20px; }
+        .alert-warning { background: #fef3c7; color: #92400e; border-left: 5px solid #f59e0b; }
         #documentLinks a { display: block; margin: 12px 0; padding: 16px 20px; background: linear-gradient(135deg, #f3f4f6, #e5e7eb); border-radius: 8px; text-decoration: none; color: #1f2937; transition: all 0.3s; font-weight: 500; border-left: 4px solid #2563eb; }
         #documentLinks a:hover { background: linear-gradient(135deg, #e5e7eb, #d1d5db); transform: translateX(5px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .login-container { max-width: 450px; margin: 80px auto; background: white; padding: 45px; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); }
@@ -52,7 +52,6 @@
         .aquisicao-card { border: 2px solid #e5e7eb; padding: 18px; margin: 14px 0; border-radius: 10px; background: linear-gradient(135deg, #f9fafb, #ffffff); transition: all 0.3s; }
         .aquisicao-card:hover { border-color: #2563eb; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1); transform: translateY(-2px); }
         .aquisicao-card strong { color: #2563eb; font-size: 16px; }
-        .aquisicao-card small { color: #6b7280; display: block; margin-top: 8px; }
         .loading { text-align: center; padding: 50px; }
         .spinner { width: 50px; height: 50px; border: 5px solid #e5e7eb; border-top-color: #2563eb; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -63,13 +62,13 @@
     </style>
 </head>
 <body>
-    <!-- TELA DE LOGIN -->
+    <!-- TELA DE LOGIN (SEMPRE PRIMEIRA TELA) -->
     <div id="loginScreen" class="login-container">
         <div class="logo" style="justify-content: center; margin-bottom: 35px;">
             <div class="logo-icon">📋</div>
             <div style="text-align: center; margin-left: 12px;">
                 <h1>Compras-AI V2.1</h1>
-                <p class="subtitle">Sistema Inteligente de Aquisições</p>
+                <p class="subtitle">Sistema Inteligente - Login Obrigatório</p>
             </div>
         </div>
         
@@ -80,20 +79,18 @@
 
         <div id="alertLogin"></div>
         
-        <!-- FORMULÁRIO DE LOGIN -->
         <form id="loginForm" onsubmit="fazerLogin(event)">
             <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="email" required placeholder="seu@email.com">
+                <input type="email" name="email" required placeholder="seu@email.com" autocomplete="email">
             </div>
             <div class="form-group">
                 <label>Senha</label>
-                <input type="password" name="senha" required placeholder="••••••••">
+                <input type="password" name="senha" required placeholder="••••••••" autocomplete="current-password">
             </div>
-            <button type="submit" class="btn btn-primary" style="width:100%; justify-content: center;">Entrar</button>
+            <button type="submit" class="btn btn-primary" style="width:100%; justify-content: center;">🔐 Entrar</button>
         </form>
 
-        <!-- FORMULÁRIO DE CADASTRO -->
         <form id="registroForm" class="hidden" onsubmit="fazerRegistro(event)">
             <div class="form-group">
                 <label>Nome Completo *</label>
@@ -108,10 +105,6 @@
                 <input type="password" name="senha" required minlength="6" placeholder="••••••••">
             </div>
             <div class="form-group">
-                <label>Telefone</label>
-                <input type="tel" name="telefone" placeholder="(11) 99999-9999">
-            </div>
-            <div class="form-group">
                 <label>Unidade *</label>
                 <input type="text" name="unidade" required placeholder="Ex: Secretaria de Educação">
             </div>
@@ -119,51 +112,22 @@
                 <label>Cargo</label>
                 <input type="text" name="cargo" placeholder="Ex: Gestor de Compras">
             </div>
-            <div class="form-group">
-                <label>Estado</label>
-                <select name="estado">
-                    <option value="">Selecione...</option>
-                    <option value="AC">Acre</option>
-                    <option value="AL">Alagoas</option>
-                    <option value="AP">Amapá</option>
-                    <option value="AM">Amazonas</option>
-                    <option value="BA">Bahia</option>
-                    <option value="CE">Ceará</option>
-                    <option value="DF">Distrito Federal</option>
-                    <option value="ES">Espírito Santo</option>
-                    <option value="GO">Goiás</option>
-                    <option value="MA">Maranhão</option>
-                    <option value="MT">Mato Grosso</option>
-                    <option value="MS">Mato Grosso do Sul</option>
-                    <option value="MG">Minas Gerais</option>
-                    <option value="PA">Pará</option>
-                    <option value="PB">Paraíba</option>
-                    <option value="PR">Paraná</option>
-                    <option value="PE">Pernambuco</option>
-                    <option value="PI">Piauí</option>
-                    <option value="RJ">Rio de Janeiro</option>
-                    <option value="RN">Rio Grande do Norte</option>
-                    <option value="RS">Rio Grande do Sul</option>
-                    <option value="RO">Rondônia</option>
-                    <option value="RR">Roraima</option>
-                    <option value="SC">Santa Catarina</option>
-                    <option value="SP">São Paulo</option>
-                    <option value="SE">Sergipe</option>
-                    <option value="TO">Tocantins</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-success" style="width:100%; justify-content: center;">Cadastrar</button>
+            <button type="submit" class="btn btn-success" style="width:100%; justify-content: center;">✅ Cadastrar</button>
         </form>
+
+        <div style="margin-top: 25px; text-align: center; font-size: 13px; color: #6b7280;">
+            <p>⚠️ Login obrigatório para usar o sistema</p>
+        </div>
     </div>
 
-    <!-- TELA DO APLICATIVO -->
+    <!-- TELA DO APLICATIVO (SÓ APARECE APÓS LOGIN) -->
     <div id="appScreen" class="container hidden">
         <header class="header">
             <div class="logo">
                 <div class="logo-icon">📋</div>
                 <div>
                     <h1>Compras-AI V2.1</h1>
-                    <p class="subtitle">Sistema Inteligente de Aquisições Públicas</p>
+                    <p class="subtitle">Sistema Inteligente de Aquisições</p>
                 </div>
             </div>
             <div style="display: flex; align-items: center;">
@@ -192,9 +156,8 @@
             </aside>
 
             <main class="wizard-container">
-                <!-- PÁGINA NOVA AQUISIÇÃO -->
                 <div id="novaPage">
-                    <h2 style="margin-bottom: 25px; color: #1f2937;">📝 Nova Aquisição</h2>
+                    <h2 style="margin-bottom: 25px;">📝 Nova Aquisição</h2>
                     <div id="alertNova"></div>
                     
                     <form id="form" onsubmit="submitForm(event)">
@@ -210,12 +173,12 @@
 
                         <div class="form-group">
                             <label>Descrição do Objeto *</label>
-                            <textarea name="descricao" required placeholder="Descreva detalhadamente o que será adquirido (quanto mais detalhes, melhor a análise automática)..."></textarea>
+                            <textarea name="descricao" required placeholder="Descreva detalhadamente..."></textarea>
                         </div>
 
                         <div class="form-group">
                             <label>Quantidade *</label>
-                            <input type="text" name="quantidade" required placeholder="Ex: 100 unidades, 500m², etc.">
+                            <input type="text" name="quantidade" required placeholder="Ex: 10 latas">
                         </div>
 
                         <div class="form-group">
@@ -224,12 +187,11 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Modalidade de Licitação *</label>
+                            <label>Modalidade *</label>
                             <select name="modalidade" required onchange="toggleHipotese(this)">
                                 <option value="dispensa">Dispensa de Licitação</option>
                                 <option value="pregao">Pregão Eletrônico</option>
                                 <option value="concorrencia">Concorrência</option>
-                                <option value="inexigibilidade">Inexigibilidade</option>
                             </select>
                         </div>
 
@@ -237,87 +199,52 @@
                             <label>Hipótese de Dispensa</label>
                             <select name="hipotese_dispensa">
                                 <option value="">Selecione...</option>
-                                <option value="dispensa_por_valor">Dispensa por Valor (Art. 75, I e II)</option>
-                                <option value="emergencia">Emergência ou Calamidade (Art. 75, VIII)</option>
-                                <option value="unico_fornecedor">Único Fornecedor</option>
+                                <option value="dispensa_por_valor">Dispensa por Valor</option>
+                                <option value="emergencia">Emergência</option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label>Complexidade da Contratação *</label>
+                            <label>Complexidade *</label>
                             <select name="complexidade" required>
-                                <option value="baixa">✅ Baixa - Compra simples e padronizada</option>
-                                <option value="media">⚠️ Média - Requer especificações técnicas</option>
-                                <option value="alta">🔴 Alta - Alta complexidade técnica/valor</option>
+                                <option value="baixa">✅ Baixa</option>
+                                <option value="media">⚠️ Média</option>
+                                <option value="alta">🔴 Alta</option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label>Prazo de Execução (dias)</label>
-                            <input type="number" name="prazo" placeholder="Ex: 90 dias">
+                            <label>Prazo (dias)</label>
+                            <input type="number" name="prazo" placeholder="90">
                         </div>
 
                         <div class="form-group">
-                            <label>Observações Adicionais</label>
-                            <textarea name="observacoes" placeholder="Informações extras relevantes..." style="min-height: 80px;"></textarea>
+                            <label>Observações</label>
+                            <textarea name="observacoes" placeholder="Informações extras..." style="min-height: 80px;"></textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-primary" style="font-size: 15px;">
-                            📊 Analisar e Criar Aquisição
-                        </button>
+                        <button type="submit" class="btn btn-primary">📊 Analisar e Criar</button>
                     </form>
 
                     <div id="resultado" class="hidden"></div>
                 </div>
 
-                <!-- PÁGINA MINHAS AQUISIÇÕES -->
                 <div id="minhasPage" class="hidden">
-                    <h2 style="margin-bottom: 25px; color: #1f2937;">📁 Minhas Aquisições</h2>
-                    <div id="listaAquisicoes">
-                        <div class="loading">
-                            <div class="spinner"></div>
-                            <p>Carregando...</p>
-                        </div>
-                    </div>
+                    <h2 style="margin-bottom: 25px;">📁 Minhas Aquisições</h2>
+                    <div id="listaAquisicoes"></div>
                 </div>
 
-                <!-- PÁGINA AJUDA -->
                 <div id="ajudaPage" class="hidden">
-                    <h2 style="margin-bottom: 20px; color: #1f2937;">❓ Ajuda</h2>
+                    <h2 style="margin-bottom: 20px;">❓ Ajuda</h2>
                     <div class="alert alert-info">
-                        <h3 style="margin-bottom: 15px;">📚 Como usar o sistema:</h3>
-                        <ol style="margin-left: 25px; line-height: 2;">
-                            <li><strong>Faça login</strong> com seu email e senha</li>
-                            <li><strong>Preencha o formulário</strong> de Nova Aquisição com os dados necessários</li>
-                            <li>O sistema <strong>analisa automaticamente</strong> e gera justificativas baseadas na legislação</li>
-                            <li>Clique em <strong>"Gerar Documentos"</strong> para baixar os arquivos DOCX editáveis</li>
-                            <li>Use <strong>"Minhas Aquisições"</strong> para visualizar seu histórico completo</li>
+                        <h3>Como usar:</h3>
+                        <ol style="margin: 15px 0 0 25px; line-height: 2;">
+                            <li>Faça login com email e senha</li>
+                            <li>Preencha o formulário de Nova Aquisição</li>
+                            <li>Sistema gera análise automática</li>
+                            <li>Clique em "Gerar Documentos"</li>
+                            <li>Baixe os arquivos DOCX</li>
                         </ol>
-                    </div>
-
-                    <div style="margin-top: 30px; padding: 20px; background: #f9fafb; border-radius: 8px;">
-                        <h3 style="margin-bottom: 15px; color: #1f2937;">🤖 Análise Inteligente Automática</h3>
-                        <p style="line-height: 1.8; color: #4b5563;">
-                            O sistema analisa automaticamente a descrição do objeto e gera:
-                        </p>
-                        <ul style="margin: 15px 0 15px 25px; line-height: 2; color: #4b5563;">
-                            <li>Justificativa da necessidade personalizada</li>
-                            <li>Normas técnicas aplicáveis (ABNT, ANVISA, etc.)</li>
-                            <li>Garantia mínima conforme Código de Defesa do Consumidor</li>
-                            <li>Justificativa da modalidade com base legal</li>
-                        </ul>
-                    </div>
-
-                    <div style="margin-top: 30px; padding: 20px; background: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
-                        <h3 style="margin-bottom: 15px; color: #92400e;">⚖️ Base Legal</h3>
-                        <p style="line-height: 1.8; color: #78350f;">
-                            Todos os documentos gerados seguem:
-                        </p>
-                        <ul style="margin: 15px 0 0 25px; line-height: 2; color: #78350f;">
-                            <li><strong>Lei 14.133/2021</strong> - Nova Lei de Licitações</li>
-                            <li><strong>IN SEGES 58/2022</strong> - Instrução Normativa</li>
-                            <li><strong>Orientações do TCU</strong> - Gestão de Riscos</li>
-                        </ul>
                     </div>
                 </div>
             </main>
@@ -328,12 +255,16 @@
         let aquisicaoAtual = null;
         let usuarioAtual = null;
 
-        // VERIFICAR SESSÃO AO CARREGAR
+        // SEMPRE VERIFICAR SESSÃO AO CARREGAR
         async function verificarSessao() {
             try {
-                const res = await fetch('/api/sessao');
+                const res = await fetch('/api/sessao', {
+                    method: 'GET',
+                    credentials: 'include' // IMPORTANTE: envia cookies
+                });
                 const data = await res.json();
-                if (data.autenticado) {
+                
+                if (data.autenticado && data.usuario) {
                     usuarioAtual = data.usuario;
                     mostrarApp();
                 } else {
@@ -345,7 +276,6 @@
             }
         }
 
-        // ALTERNAR ABAS DE LOGIN/CADASTRO
         function showTab(tab) {
             document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
             event.target.classList.add('active');
@@ -360,32 +290,33 @@
             document.getElementById('alertLogin').innerHTML = '';
         }
 
-        // FAZER LOGIN
         async function fazerLogin(e) {
             e.preventDefault();
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData);
 
+            showAlert('alertLogin', '⏳ Fazendo login...', 'info');
+
             try {
                 const res = await fetch('/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include', // IMPORTANTE: salva sessão
                     body: JSON.stringify(data)
                 });
                 const result = await res.json();
                 
-                if (result.sucesso) {
+                if (result.sucesso && result.usuario) {
                     usuarioAtual = result.usuario;
                     mostrarApp();
                 } else {
                     showAlert('alertLogin', result.erro || 'Email ou senha incorretos', 'error');
                 }
             } catch (err) {
-                showAlert('alertLogin', 'Erro de conexão com o servidor', 'error');
+                showAlert('alertLogin', 'Erro de conexão', 'error');
             }
         }
 
-        // FAZER CADASTRO
         async function fazerRegistro(e) {
             e.preventDefault();
             const formData = new FormData(e.target);
@@ -400,286 +331,209 @@
                 const result = await res.json();
                 
                 if (result.sucesso) {
-                    showAlert('alertLogin', '✅ Cadastro realizado com sucesso! Faça login.', 'success');
+                    showAlert('alertLogin', '✅ Cadastro OK! Faça login.', 'success');
                     document.querySelectorAll('.login-tab')[0].click();
                     e.target.reset();
                 } else {
                     showAlert('alertLogin', result.erro || 'Erro ao cadastrar', 'error');
                 }
             } catch (err) {
-                showAlert('alertLogin', 'Erro de conexão com o servidor', 'error');
+                showAlert('alertLogin', 'Erro de conexão', 'error');
             }
         }
 
-        // FAZER LOGOUT
         async function fazerLogout() {
             try {
-                await fetch('/api/logout', { method: 'POST' });
+                await fetch('/api/logout', { 
+                    method: 'POST',
+                    credentials: 'include'
+                });
                 usuarioAtual = null;
-                aquisicaoAtual = null;
                 mostrarLogin();
             } catch (err) {
-                console.error('Erro ao fazer logout:', err);
+                console.error('Erro:', err);
             }
         }
 
-        // MOSTRAR TELA DE LOGIN
         function mostrarLogin() {
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('appScreen').classList.add('hidden');
-            document.getElementById('loginForm').reset();
-            document.getElementById('registroForm').reset();
-            document.getElementById('alertLogin').innerHTML = '';
         }
 
-        // MOSTRAR APLICATIVO
         function mostrarApp() {
+            if (!usuarioAtual) {
+                mostrarLogin();
+                return;
+            }
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('appScreen').classList.remove('hidden');
             document.getElementById('userName').textContent = usuarioAtual.nome;
             document.getElementById('userUnit').textContent = usuarioAtual.unidade;
-            showPage('nova');
         }
 
-        // EXIBIR ALERTAS
         function showAlert(elementId, message, type) {
             const alertClass = type === 'error' ? 'alert-error' : type === 'success' ? 'alert-success' : 'alert-info';
             document.getElementById(elementId).innerHTML = `<div class="alert ${alertClass}">${message}</div>`;
-            setTimeout(() => {
-                const el = document.getElementById(elementId);
-                if (el && el.querySelector('.alert-success')) {
-                    el.innerHTML = '';
-                }
-            }, 5000);
         }
 
-        // TOGGLE HIPÓTESE DE DISPENSA
         function toggleHipotese(select) {
-            const hipoteseGroup = document.getElementById('hipoteseGroup');
-            if (select.value === 'dispensa') {
-                hipoteseGroup.classList.remove('hidden');
-            } else {
-                hipoteseGroup.classList.add('hidden');
-            }
+            document.getElementById('hipoteseGroup').classList.toggle('hidden', select.value !== 'dispensa');
         }
 
-        // NAVEGAR ENTRE PÁGINAS
         function showPage(page) {
             document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
             event.target.closest('.menu-item').classList.add('active');
-            
-            ['novaPage', 'minhasPage', 'ajudaPage'].forEach(p => {
-                document.getElementById(p).classList.add('hidden');
-            });
-            
+            ['novaPage', 'minhasPage', 'ajudaPage'].forEach(p => document.getElementById(p).classList.add('hidden'));
             document.getElementById(page + 'Page').classList.remove('hidden');
             
             if (page === 'minhas') carregarMinhasAquisicoes();
             if (page === 'nova') {
                 document.getElementById('resultado').classList.add('hidden');
-                document.getElementById('alertNova').innerHTML = '';
+                document.getElementById('form').reset();
             }
         }
 
-        // SUBMETER FORMULÁRIO DE AQUISIÇÃO
         async function submitForm(e) {
             e.preventDefault();
+            
+            // VERIFICAR SE ESTÁ LOGADO ANTES
+            if (!usuarioAtual) {
+                showAlert('alertNova', '❌ Sessão expirada. Faça login novamente.', 'error');
+                setTimeout(() => mostrarLogin(), 2000);
+                return;
+            }
+
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData);
 
-            showAlert('alertNova', '⏳ Analisando sua solicitação...', 'info');
+            showAlert('alertNova', '⏳ Analisando...', 'info');
 
             try {
                 const res = await fetch('/api/aquisicao', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include', // IMPORTANTE
                     body: JSON.stringify(data)
                 });
+                
+                if (res.status === 401) {
+                    showAlert('alertNova', '❌ Sessão expirada. Redirecionando...', 'error');
+                    setTimeout(() => mostrarLogin(), 2000);
+                    return;
+                }
+
                 const result = await res.json();
                 
                 if (result.sucesso) {
                     aquisicaoAtual = result.aquisicao_id;
                     mostrarResultado(result);
                 } else {
-                    showAlert('alertNova', result.erro || 'Erro ao criar aquisição', 'error');
+                    showAlert('alertNova', result.erro || 'Erro', 'error');
                 }
             } catch (err) {
-                showAlert('alertNova', 'Erro de conexão: ' + err.message, 'error');
+                showAlert('alertNova', 'Erro: ' + err.message, 'error');
             }
         }
 
-        // MOSTRAR RESULTADO DA ANÁLISE
         function mostrarResultado(result) {
             document.getElementById('alertNova').innerHTML = '';
-            
             const html = `
-                <div class="alert alert-success" style="font-size: 16px;">
-                    ✅ <strong>Aquisição criada com sucesso!</strong>
+                <div class="alert alert-success">✅ Aquisição criada!</div>
+                <div style="background: #f9fafb; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h3>📊 Análise:</h3>
+                    <p style="margin: 10px 0;"><strong>ETP:</strong> ${result.regras.etp.tipo} - ${result.regras.etp.justificativa}</p>
+                    <p><strong>Mapa de Risco:</strong> ${result.regras.mapa_risco.nivel_risco} - ${result.regras.mapa_risco.justificativa}</p>
                 </div>
-                
-                <div style="background: #f9fafb; padding: 25px; border-radius: 10px; margin: 25px 0;">
-                    <h3 style="color: #1f2937; margin-bottom: 20px;">📊 Análise Automática</h3>
-                    
-                    <div style="margin-bottom: 20px; padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #2563eb;">
-                        <strong style="color: #2563eb;">📋 ETP (Estudo Técnico Preliminar):</strong>
-                        <div style="margin-top: 8px; color: #4b5563;">
-                            <strong>Tipo:</strong> ${result.regras.etp.tipo}<br>
-                            <strong>Justificativa:</strong> ${result.regras.etp.justificativa}
-                        </div>
-                    </div>
-                    
-                    <div style="padding: 15px; background: white; border-radius: 8px; border-left: 4px solid ${
-                        result.regras.mapa_risco.nivel_risco === 'ALTO' ? '#ef4444' :
-                        result.regras.mapa_risco.nivel_risco === 'MEDIO' ? '#f59e0b' : '#10b981'
-                    };">
-                        <strong style="color: ${
-                            result.regras.mapa_risco.nivel_risco === 'ALTO' ? '#ef4444' :
-                            result.regras.mapa_risco.nivel_risco === 'MEDIO' ? '#f59e0b' : '#10b981'
-                        };">⚠️ Mapa de Risco:</strong>
-                        <div style="margin-top: 8px; color: #4b5563;">
-                            <strong>Nível:</strong> ${result.regras.mapa_risco.nivel_risco}<br>
-                            <strong>Justificativa:</strong> ${result.regras.mapa_risco.justificativa}
-                        </div>
-                    </div>
-                </div>
-                
-                <div style="margin-top: 30px; text-align: center;">
-                    <button onclick="gerarDocs()" class="btn btn-success" style="font-size: 16px;">
-                        📥 Gerar Documentos DOCX
-                    </button>
-                    <button onclick="voltarMenu()" class="btn btn-secondary">
-                        🏠 Voltar ao Menu
-                    </button>
+                <div style="margin-top: 25px; text-align: center;">
+                    <button onclick="gerarDocs()" class="btn btn-success">📥 Gerar Documentos</button>
+                    <button onclick="voltarMenu()" class="btn btn-secondary">🏠 Voltar</button>
                 </div>
             `;
-            
             const div = document.getElementById('resultado');
             div.innerHTML = html;
             div.classList.remove('hidden');
-            
-            setTimeout(() => {
-                div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 100);
         }
 
-        // GERAR DOCUMENTOS
         async function gerarDocs() {
             const resultDiv = document.getElementById('resultado');
-            resultDiv.innerHTML = `
-                <div class="loading">
-                    <div class="spinner"></div>
-                    <p style="font-size: 16px; color: #4b5563;">Gerando documentos DOCX... Isso pode levar alguns segundos.</p>
-                </div>
-            `;
+            resultDiv.innerHTML = '<div class="loading"><div class="spinner"></div><p>Gerando documentos...</p></div>';
 
             try {
                 const res = await fetch('/api/gerar-documentos/' + aquisicaoAtual, { 
-                    method: 'POST' 
+                    method: 'POST',
+                    credentials: 'include'
                 });
+                
+                if (res.status === 401) {
+                    showAlert('alertNova', '❌ Sessão expirada.', 'error');
+                    setTimeout(() => mostrarLogin(), 2000);
+                    return;
+                }
+
                 const data = await res.json();
                 
                 if (data.sucesso) {
-                    let html = `
-                        <div class="alert alert-success" style="font-size: 16px;">
-                            ✅ <strong>Documentos gerados com sucesso!</strong>
-                        </div>
-                        <h3 style="margin: 25px 0 15px 0; color: #1f2937;">📄 Downloads Disponíveis:</h3>
-                        <div id="documentLinks">
-                    `;
-                    
+                    let html = '<div class="alert alert-success">✅ Documentos gerados!</div><div id="documentLinks">';
                     data.documentos.forEach(doc => {
                         html += `<a href="${doc.url}" download>📄 ${doc.tipo} - ${doc.nome}</a>`;
                     });
-                    
-                    html += `
-                        </div>
-                        <div style="margin-top: 30px; text-align: center;">
-                            <button onclick="voltarMenu()" class="btn btn-primary" style="font-size: 16px;">
-                                🏠 Finalizar e Voltar ao Menu
-                            </button>
-                        </div>
-                    `;
-                    
+                    html += '</div><div style="margin-top: 25px; text-align: center;"><button onclick="voltarMenu()" class="btn btn-primary">🏠 Finalizar e Voltar</button></div>';
                     resultDiv.innerHTML = html;
                 } else {
-                    showAlert('alertNova', data.erro || 'Erro ao gerar documentos', 'error');
+                    showAlert('alertNova', data.erro || 'Erro', 'error');
                 }
             } catch (err) {
-                showAlert('alertNova', 'Erro ao gerar documentos: ' + err.message, 'error');
+                showAlert('alertNova', 'Erro: ' + err.message, 'error');
             }
         }
 
-        // VOLTAR AO MENU
         function voltarMenu() {
             document.getElementById('form').reset();
             document.getElementById('resultado').classList.add('hidden');
             document.getElementById('alertNova').innerHTML = '';
-            document.getElementById('hipoteseGroup').classList.add('hidden');
             aquisicaoAtual = null;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // CARREGAR MINHAS AQUISIÇÕES
         async function carregarMinhasAquisicoes() {
             const lista = document.getElementById('listaAquisicoes');
-            lista.innerHTML = '<div class="loading"><div class="spinner"></div><p>Carregando aquisições...</p></div>';
+            lista.innerHTML = '<div class="loading"><div class="spinner"></div><p>Carregando...</p></div>';
 
             try {
-                const res = await fetch('/api/minhas-aquisicoes');
+                const res = await fetch('/api/minhas-aquisicoes', {
+                    credentials: 'include'
+                });
+                
+                if (res.status === 401) {
+                    lista.innerHTML = '<div class="alert alert-error">Sessão expirada. Faça login novamente.</div>';
+                    setTimeout(() => mostrarLogin(), 2000);
+                    return;
+                }
+
                 const data = await res.json();
                 
                 if (data.sucesso) {
                     if (data.aquisicoes.length === 0) {
-                        lista.innerHTML = `
-                            <div style="text-align: center; padding: 60px 20px; color: #6b7280;">
-                                <div style="font-size: 60px; margin-bottom: 20px;">📭</div>
-                                <h3 style="color: #4b5563;">Nenhuma aquisição encontrada</h3>
-                                <p style="margin-top: 10px;">Crie sua primeira aquisição clicando em "Nova Aquisição"</p>
-                            </div>
-                        `;
+                        lista.innerHTML = '<div style="text-align: center; padding: 60px; color: #6b7280;"><div style="font-size: 60px;">📭</div><h3>Nenhuma aquisição</h3></div>';
                     } else {
                         let html = '';
                         data.aquisicoes.forEach(aq => {
-                            const tipoIcon = {
-                                'produto': '🛒',
-                                'servico': '🔧',
-                                'obra': '🏗️',
-                                'engenharia': '📐'
-                            };
-                            
-                            html += `
-                                <div class="aquisicao-card">
-                                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
-                                        <strong style="flex: 1;">
-                                            ${tipoIcon[aq.tipo_contratacao] || '📋'} 
-                                            ${aq.tipo_contratacao.toUpperCase()}
-                                        </strong>
-                                        <span style="background: #e5e7eb; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">
-                                            ${aq.modalidade}
-                                        </span>
-                                    </div>
-                                    <p style="color: #4b5563; margin-bottom: 12px; line-height: 1.6;">
-                                        ${aq.descricao}
-                                    </p>
-                                    <small style="display: block; border-top: 1px solid #e5e7eb; padding-top: 10px; margin-top: 10px;">
-                                        💰 <strong>Valor:</strong> R$ ${parseFloat(aq.valor_estimado).toLocaleString('pt-BR', {minimumFractionDigits: 2})} | 
-                                        📊 <strong>Complexidade:</strong> ${aq.complexidade} | 
-                                        📅 <strong>Criado:</strong> ${new Date(aq.criado_em).toLocaleDateString('pt-BR')}
-                                    </small>
-                                </div>
-                            `;
+                            html += `<div class="aquisicao-card">
+                                <strong>${aq.tipo_contratacao.toUpperCase()}</strong>: ${aq.descricao}<br>
+                                <small>Valor: R$ ${parseFloat(aq.valor_estimado).toFixed(2)} | ${new Date(aq.criado_em).toLocaleDateString('pt-BR')}</small>
+                            </div>`;
                         });
                         lista.innerHTML = html;
                     }
                 } else {
-                    lista.innerHTML = '<div class="alert alert-error">Erro ao carregar aquisições</div>';
+                    lista.innerHTML = '<div class="alert alert-error">Erro ao carregar</div>';
                 }
             } catch (err) {
-                lista.innerHTML = '<div class="alert alert-error">Erro de conexão ao carregar aquisições</div>';
+                lista.innerHTML = '<div class="alert alert-error">Erro de conexão</div>';
             }
         }
 
-        // INICIALIZAR AO CARREGAR PÁGINA
+        // INICIALIZAR
         window.addEventListener('DOMContentLoaded', verificarSessao);
     </script>
 </body>
